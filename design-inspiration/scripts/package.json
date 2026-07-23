@@ -1,0 +1,7 @@
+{
+  "name": "design-inspiration-capture",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Playwright capture helper for the design-inspiration skill",
+  "dependencies": { "playwright": "1.61.1" }
+}
