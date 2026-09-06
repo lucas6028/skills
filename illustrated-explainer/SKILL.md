@@ -22,7 +22,7 @@ description: >-
 
 把一個使用者想學的主題（演算法 / 框架 / 技術 / 系統 / 論文），變成一篇**圖文並茂、自成一檔的深度科普文章**（單一 `.html`，繁體中文）。目標讀者體驗像知乎精選、distill.pub、Lilian Weng blog 那種——先給直覺，再上數學與圖解，配實例、程式碼、結果、出處。
 
-輸出是**同一篇文章的兩份**：(1) 一個本機 `.html` 檔——CDN 載 KaTeX（公式）與 highlight.js（程式碼），所有圖以 base64 內嵌，整檔可攜、雙擊就能看；(2) 一個發佈出去的 **Artifact**——線上網址，手機能看、能分享。第二份由 `scripts/artifactize.py` 從第一份轉出，兩份內容一致。
+輸出是**同一篇文章的兩份**：(1) 一個本機 `.html` 檔（放在 `/tmp`）——CDN 載 KaTeX（公式）與 highlight.js（程式碼），所有圖以 base64 內嵌，整檔可攜、雙擊就能看；(2) 一個發佈出去的 **Artifact**——線上網址，手機能看、能分享。第二份由 `scripts/artifactize.py` 從第一份轉出，兩份內容一致。
 
 ## 核心理念
 
@@ -40,7 +40,7 @@ description: >-
 ### 2. 研究（先讀 `references/research-and-sources.md`）
 **不要憑記憶寫。** 先 WebSearch 找正典來源，論文優先抓 arXiv 的 HTML 版（`ar5iv.org/abs/<id>`），框架優先官方文件。挖出：解決什麼問題、核心洞見、關鍵公式/機制、實驗結果、侷限、時間軸。至少交叉 2 個來源。
 
-**這一步就要把原圖找出來並下載。** 從論文/教學頁面挑出 2-4 張招牌圖（架構圖、機制示意、代表性結果圖——那種「看過就記得」的圖），記下圖片 URL 並下載到輸出資料夾。這些原圖是文章的核心素材，預期會直接嵌入（配標來源），別漏做。細節見該 reference。
+**這一步就要把原圖找出來並下載。** 從論文/教學頁面挑出 2-4 張招牌圖（架構圖、機制示意、代表性結果圖——那種「看過就記得」的圖），記下圖片 URL 並下載到 `/tmp` 下的暫存資料夾（例如 `/tmp/<slug>-figs/`）。這些原圖是文章的核心素材，預期會直接嵌入（配標來源），別漏做。細節見該 reference。
 
 ### 3. 規劃文章骨架
 用下面的「文章結構」排出這篇的章節與每章要放什麼圖。先想清楚**這篇的招牌圖是哪 2-3 張**（讀者靠它們理解），再動手。
@@ -53,13 +53,13 @@ description: >-
 - **AI 封面/插圖**：**選配、只裝飾**。偵測到圖片生成 key（x-coach 的 `.env LLM_API_KEY`）才用；沒有就跳過，用漸層/概念圖當頭圖。絕不用 AI 生圖畫技術圖。
 
 ### 5. 組裝 HTML
-複製 `assets/template.html`，逐一填 `{{PLACEHOLDER}}`。公式寫 `\( \)` / `$$ $$`（KaTeX 自動 render），程式碼用 `<pre><code class="language-python">`（highlight.js 自動上色）。善用 template 提供的元件：`.tldr`、`.callout`（tip/key/warn）、`figure` + `figcaption`、`.table-scroll`、`nav.toc`。輸出檔名用主題的英文/拼音 slug，例如 `transformer-explained.html`，寫到使用者指定處或當前目錄。
+複製 `assets/template.html`，逐一填 `{{PLACEHOLDER}}`。公式寫 `\( \)` / `$$ $$`（KaTeX 自動 render），程式碼用 `<pre><code class="language-python">`（highlight.js 自動上色）。善用 template 提供的元件：`.tldr`、`.callout`（tip/key/warn）、`figure` + `figcaption`、`.table-scroll`、`nav.toc`。輸出檔名用主題的英文/拼音 slug，**寫到 `/tmp`**——例如 `/tmp/transformer-explained.html`。放 `/tmp` 是為了不把產出物混進 code repo 或版本控制；只有使用者明確指定路徑時才放別處。
 
 ### 6. 驗證
 在瀏覽器打開產出的 `.html`（Browser pane），確認：公式有 render（沒有出現生 LaTeX）、程式碼有上色、圖都顯示（沒破圖）、明暗主題都正常、手機寬度不爆版。有問題就修 source 再看。
 
 ### 7. 發佈成 Artifact
-本機檔驗過再發佈，兩份才會一致。跑 `python scripts/artifactize.py <article>.html`，產出 `<article>.artifact.html`，再用 `Artifact` 工具發佈它（`file_path` 指向產出檔；第一次發佈要給 `favicon` emoji 與一句 `description`，`<title>` 腳本已留在檔案最上面）。
+本機檔驗過再發佈，兩份才會一致。跑 `python scripts/artifactize.py /tmp/<article>.html`，產出同一層的 `/tmp/<article>.artifact.html`，再用 `Artifact` 工具發佈它（`file_path` 指向產出檔；第一次發佈要給 `favicon` emoji 與一句 `description`，`<title>` 腳本已留在檔案最上面）。
 
 腳本做三件事，都是 Artifact runtime 的硬性要求：把外部樣式表（KaTeX、highlight.js 主題）連同 KaTeX 的 woff2 字型內嵌、把被擋掉的 CDN script 換成 cdnjs、脫掉 `<!DOCTYPE>/<html>/<head>/<body>` 外殼（runtime 自己會包一層，留著會壞版）。原因是 Artifact 的 CSP 只允許 fonts.googleapis.com 的外部樣式表，script 只收 cdnjs.cloudflare.com、cdn.jsdelivr.net/npm/ 等少數來源——原檔直接發佈會變成沒有公式樣式、沒有程式碼上色。內嵌的 base64 圖不受影響。發佈後在 Artifact 網址上再掃一眼公式與程式碼。
 
@@ -121,7 +121,7 @@ description: >-
 | matplotlib 圖 | `from fig_to_datauri import fig_to_datauri, figure_html` → `figure_html(fig_to_datauri(plt.gcf()), caption=…)` |
 | 手寫概念圖 | 直接寫 `<figure><svg …>…</svg><figcaption>…</figcaption></figure>`，著色用 `var(--accent)` 等 |
 | 表格 | 包一層 `<div class="table-scroll"><table>…</table></div>`（手機可橫捲） |
-| 發佈成 Artifact | `python scripts/artifactize.py article.html` → 用 `Artifact` 工具發佈產出的 `article.artifact.html` |
+| 發佈成 Artifact | `python scripts/artifactize.py /tmp/article.html` → 用 `Artifact` 工具發佈產出的 `/tmp/article.artifact.html` |
 
 參考檔：
 - `references/research-and-sources.md` — 找來源（arXiv HTML 優先）、四種圖的來源與畫法、版權規則、FLUX recipe。
