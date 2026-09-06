@@ -5,7 +5,7 @@
       "id": 0,
       "name": "algorithm-self-attention",
       "prompt": "我想搞懂 Transformer 的 self-attention 機制，幫我做一篇圖文並茂的完整介紹",
-      "expected_output": "Single self-contained .html file, Traditional Chinese, Zhihu-style deep dive: motivation, intuition, the Q/K/V + scaled-dot-product math rendered by KaTeX, at least one concept diagram (attention matrix / architecture) as inline SVG or image, a minimal code snippet, and cited sources (Attention Is All You Need).",
+      "expected_output": "Single self-contained .html file plus a published Artifact of the same article, Traditional Chinese, Zhihu-style deep dive: motivation, intuition, the Q/K/V + scaled-dot-product math rendered by KaTeX, at least one concept diagram (attention matrix / architecture) as inline SVG or image, a minimal code snippet, and cited sources (Attention Is All You Need).",
       "files": [],
       "assertions": []
     },
@@ -13,7 +13,7 @@
       "id": 1,
       "name": "framework-react-usereducer",
       "prompt": "幫我寫一篇 React useReducer 的深入介紹，我想真正理解它怎麼運作、跟 useState 差在哪、什麼時候該用",
-      "expected_output": "Single self-contained .html file, Traditional Chinese. Framework-flavored explainer grounded in official React docs: what problem it solves, the reducer/dispatch mental model with a diagram, useState-vs-useReducer comparison (ideally a table), a runnable code example, when-to-use guidance, cited to official React documentation.",
+      "expected_output": "Single self-contained .html file plus a published Artifact of the same article, Traditional Chinese. Framework-flavored explainer grounded in official React docs: what problem it solves, the reducer/dispatch mental model with a diagram, useState-vs-useReducer comparison (ideally a table), a runnable code example, when-to-use guidance, cited to official React documentation.",
       "files": [],
       "assertions": []
     },
@@ -21,7 +21,7 @@
       "id": 2,
       "name": "paper-by-url-resnet",
       "prompt": "這篇論文 https://arxiv.org/abs/1512.03385 我想學，幫我做一份完整的介紹",
-      "expected_output": "Single self-contained .html file, Traditional Chinese. Paper deep dive of ResNet (Deep Residual Learning): the degradation problem it solves, the residual-block intuition with a diagram, the identity-shortcut math, key experimental results (ImageNet, depth), limitations/impact, cited to the arXiv paper. Should fetch the arXiv source rather than rely purely on memory.",
+      "expected_output": "Single self-contained .html file plus a published Artifact of the same article, Traditional Chinese. Paper deep dive of ResNet (Deep Residual Learning): the degradation problem it solves, the residual-block intuition with a diagram, the identity-shortcut math, key experimental results (ImageNet, depth), limitations/impact, cited to the arXiv paper. Should fetch the arXiv source rather than rely purely on memory.",
       "files": [],
       "assertions": []
     }
